@@ -21,14 +21,27 @@ def get_schema()->str:
     conn.close()
     return results
 
-def run_sql(query:str)->dict:
+def is_safe_select(query: str) -> bool:
+    cleaned = query.strip().rstrip(";").strip()
+    if not cleaned.lower().startswith(("select", "with")):
+        return False
+    if ";" in cleaned:  # more than one statement
+        return False
+    return True
+
+
+def run_sql(query: str) -> dict:
+    if not is_safe_select(query):
+        return {"error": "Only a single SELECT query is allowed."}
+
     conn = sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True)
-    cur =conn.cursor()
+    cur = conn.cursor()
     try:
         cur.execute(query)
         rows = cur.fetchall()
         columns = [col[0] for col in cur.description]
-        results = [dict(zip(columns,row)) for row in rows]
+        results = [dict(zip(columns, row)) for row in rows]
+        return {"columns": columns, "rows": results}
     except sqlite3.Error as e:
         return {"error": str(e)}
     finally:

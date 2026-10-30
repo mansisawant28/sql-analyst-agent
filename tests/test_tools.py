@@ -1,4 +1,4 @@
-from sql_agent.tools import get_schema, run_sql
+from sql_agent.tools import get_schema, is_safe_select, run_sql
 
 
 def test_schema_contains_core_tables():
@@ -9,7 +9,7 @@ def test_schema_contains_core_tables():
 def test_run_sql_returns_expected_results():
     query = "SELECT COUNT(*) AS total FROM Track;"
     results = run_sql(query)
-    assert results[0]["total"] == 3503
+    assert results["rows"][0]["total"] == 3503
 
 def test_run_sql_handles_invalid_query():
     query = "SELECT * FROM NonExistentTable;"
@@ -23,3 +23,33 @@ def test_run_sql_cannot_modify_data():
 
     count = run_sql("SELECT COUNT(*) AS total FROM Track")
     assert count["rows"][0]["total"] == 3503
+
+def test_rejects_non_select():
+    result = run_sql("DROP TABLE Track")
+    assert "error" in result
+    assert "SELECT" in result["error"]
+
+
+def test_rejects_multiple_statements():
+    result = run_sql("SELECT 1; DROP TABLE Track")
+    assert "error" in result
+
+
+def test_lowercase_select_works():
+    result = run_sql("select count(*) as total from Track")
+    assert result["rows"][0]["total"] == 3503
+
+
+def test_with_query_works():
+    result = run_sql("WITH t AS (SELECT 1 AS x) SELECT x FROM t")
+    assert result["rows"][0]["x"] == 1
+
+
+def test_whitespace_and_trailing_semicolon_work():
+    result = run_sql("   SELECT COUNT(*) AS total FROM Track;  ")
+    assert result["rows"][0]["total"] == 3503
+
+
+def test_is_safe_select_helper():
+    assert is_safe_select("SELECT 1")
+    assert not is_safe_select("DELETE FROM Track")
