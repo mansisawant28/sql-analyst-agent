@@ -22,7 +22,7 @@ def get_schema()->str:
     return results
 
 def run_sql(query:str)->dict:
-    conn=sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True)
     cur =conn.cursor()
     try:
         cur.execute(query)

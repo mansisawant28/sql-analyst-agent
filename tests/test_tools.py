@@ -16,3 +16,10 @@ def test_run_sql_handles_invalid_query():
     results = run_sql(query)
     assert "error" in results
     assert "NonExistentTable" in results["error"]
+
+def test_run_sql_cannot_modify_data():
+    result = run_sql("DELETE FROM Track")
+    assert "error" in result
+
+    count = run_sql("SELECT COUNT(*) AS total FROM Track")
+    assert count["rows"][0]["total"] == 3503
