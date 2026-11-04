@@ -53,3 +53,22 @@ def test_whitespace_and_trailing_semicolon_work():
 def test_is_safe_select_helper():
     assert is_safe_select("SELECT 1")
     assert not is_safe_select("DELETE FROM Track")
+
+def test_row_limit_truncates_large_results():
+    result = run_sql("SELECT * FROM Track")
+    assert len(result["rows"]) == 100
+    assert result["truncated"] is True
+
+
+def test_small_results_not_truncated():
+    result = run_sql("SELECT * FROM Genre")
+    assert result["truncated"] is False
+
+
+def test_slow_query_is_stopped():
+    slow = """
+    WITH RECURSIVE r(x) AS (SELECT 1 UNION ALL SELECT x + 1 FROM r)
+    SELECT COUNT(*) FROM r
+    """
+    result = run_sql(slow)
+    assert "error" in result
