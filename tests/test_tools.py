@@ -1,4 +1,4 @@
-from sql_agent.tools import get_schema, is_safe_select, run_sql
+from sql_agent.tools import MAX_ROWS, get_schema, is_safe_select, run_sql
 
 
 def test_schema_contains_core_tables():
@@ -56,12 +56,12 @@ def test_is_safe_select_helper():
 
 def test_row_limit_truncates_large_results():
     result = run_sql("SELECT * FROM Track")
-    assert len(result["rows"]) == 100
+    assert len(result["rows"]) == MAX_ROWS
     assert result["truncated"] is True
 
 
 def test_small_results_not_truncated():
-    result = run_sql("SELECT * FROM Genre")
+    result = run_sql("SELECT * FROM Genre LIMIT 5")
     assert result["truncated"] is False
 
 

@@ -1,5 +1,7 @@
 import json
 
+from groq import APIStatusError
+
 from .llm import get_llm
 from .tool_specs import TOOLS
 from .tools import get_schema, run_sql
@@ -9,7 +11,9 @@ Always call get_schema first to see the tables and columns.
 Then write a SQL SELECT query and run it with run_sql.
 If a query returns an error, read the message, fix the SQL and try again.
 Use aliases for columns (for example Artist.Name AS artist_name).
-Answer in plain English and mention the SQL you used."""
+Answer in plain English and mention the SQL you used.
+Results are limited to 20 rows. If "truncated" is true, use COUNT, GROUP BY or LIMIT
+to get what you need instead of reading all rows."""
 
 MAX_STEPS = 5
 
@@ -26,7 +30,11 @@ def ask(question: str) -> str:
     ]
 
     for step in range(MAX_STEPS):
-        response = get_llm(messages, TOOLS)
+        try:
+            response = get_llm(messages, TOOLS)
+        except APIStatusError as e:
+            return f"The model request failed (error {e.status_code}). Try a narrower question."
+
         message = response.choices[0].message
 
         # No tool requests means the model has given its final answer.

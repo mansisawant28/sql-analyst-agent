@@ -2,7 +2,7 @@ import sqlite3
 from pathlib import Path
 import time
 
-MAX_ROWS = 100
+MAX_ROWS = 20
 TIMEOUT_SECONDS = 5
 
 DB_PATH = Path(__file__).resolve().parents[2] / "data" / "chinook.db"
