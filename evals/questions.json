@@ -1,0 +1,212 @@
+[
+  {
+    "id": 1,
+    "difficulty": "easy",
+    "question": "How many tracks are in the database?",
+    "sql": "SELECT COUNT(*) AS total_tracks FROM Track;"
+  },
+  {
+    "id": 2,
+    "difficulty": "easy",
+    "question": "Which country has the most customers?",
+    "sql": "SELECT Country, COUNT(*) AS n FROM Customer GROUP BY Country ORDER BY n DESC LIMIT 1;"
+  },
+  {
+    "id": 3,
+    "difficulty": "medium",
+    "question": "Which artist has the most albums?",
+    "sql": "SELECT ar.Name, COUNT(*) AS album_count FROM Artist ar JOIN Album al ON al.ArtistId = ar.ArtistId GROUP BY ar.ArtistId ORDER BY album_count DESC LIMIT 1;"
+  },
+  {
+    "id": 4,
+    "difficulty": "medium",
+    "question": "What are the top 3 countries by total revenue?",
+    "sql": "SELECT c.Country, ROUND(SUM(i.Total), 2) AS revenue FROM Customer c JOIN Invoice i ON i.CustomerId = c.CustomerId GROUP BY c.Country ORDER BY revenue DESC LIMIT 3;"
+  },
+  {
+    "id": 5,
+    "difficulty": "medium",
+    "question": "Which genre has the most tracks?",
+    "sql": "SELECT g.Name, COUNT(*) AS track_count FROM Genre g JOIN Track t ON t.GenreId = g.GenreId GROUP BY g.GenreId ORDER BY track_count DESC LIMIT 1;"
+  },
+  {
+    "id": 6,
+    "difficulty": "easy",
+    "question": "How many customers are there?",
+    "sql": "SELECT COUNT(*) AS total_customers FROM Customer;"
+  },
+  {
+    "id": 7,
+    "difficulty": "easy",
+    "question": "How many customers are from Brazil?",
+    "sql": "SELECT COUNT(*) AS brazil_customers FROM Customer WHERE Country = 'Brazil';"
+  },
+  {
+    "id": 8,
+    "difficulty": "easy",
+    "question": "What is the average invoice total, rounded to 2 decimal places?",
+    "sql": "SELECT ROUND(AVG(Total), 2) AS avg_invoice_total FROM Invoice;"
+  },
+  {
+    "id": 9,
+    "difficulty": "easy",
+    "question": "How many albums are in the database?",
+    "sql": "SELECT COUNT(*) AS total_albums FROM Album;"
+  },
+  {
+    "id": 10,
+    "difficulty": "easy",
+    "question": "How many different countries do customers come from?",
+    "sql": "SELECT COUNT(DISTINCT Country) AS country_count FROM Customer;"
+  },
+  {
+    "id": 11,
+    "difficulty": "easy",
+    "question": "What is the total revenue across all invoices, rounded to 2 decimal places?",
+    "sql": "SELECT ROUND(SUM(Total), 2) AS total_revenue FROM Invoice;"
+  },
+  {
+    "id": 12,
+    "difficulty": "easy",
+    "question": "How many employees work at the company?",
+    "sql": "SELECT COUNT(*) AS total_employees FROM Employee;"
+  },
+  {
+    "id": 13,
+    "difficulty": "easy",
+    "question": "How many genres are there?",
+    "sql": "SELECT COUNT(*) AS total_genres FROM Genre;"
+  },
+  {
+    "id": 14,
+    "difficulty": "medium",
+    "question": "What are the 5 genres with the most tracks, and how many tracks does each have?",
+    "sql": "SELECT g.Name AS genre, COUNT(*) AS track_count FROM Genre g JOIN Track t ON t.GenreId = g.GenreId GROUP BY g.GenreId ORDER BY track_count DESC LIMIT 5;"
+  },
+  {
+    "id": 15,
+    "difficulty": "medium",
+    "question": "Who are the 3 customers who have spent the most in total? Show their full names and totals rounded to 2 decimal places.",
+    "sql": "SELECT c.FirstName || ' ' || c.LastName AS customer_name, ROUND(SUM(i.Total), 2) AS total_spent FROM Customer c JOIN Invoice i ON i.CustomerId = c.CustomerId GROUP BY c.CustomerId ORDER BY total_spent DESC LIMIT 3;"
+  },
+  {
+    "id": 16,
+    "difficulty": "medium",
+    "question": "How many tracks are on the album titled 'Let There Be Rock'?",
+    "sql": "SELECT COUNT(*) AS track_count FROM Track t JOIN Album a ON a.AlbumId = t.AlbumId WHERE a.Title = 'Let There Be Rock';"
+  },
+  {
+    "id": 17,
+    "difficulty": "medium",
+    "question": "Which album has the most tracks, and how many does it have?",
+    "sql": "SELECT a.Title AS album, COUNT(*) AS track_count FROM Album a JOIN Track t ON t.AlbumId = a.AlbumId GROUP BY a.AlbumId ORDER BY track_count DESC LIMIT 1;"
+  },
+  {
+    "id": 18,
+    "difficulty": "medium",
+    "question": "What was the total revenue in each year, rounded to 2 decimal places? List the years in order.",
+    "sql": "SELECT strftime('%Y', InvoiceDate) AS year, ROUND(SUM(Total), 2) AS revenue FROM Invoice GROUP BY year ORDER BY year;"
+  },
+  {
+    "id": 19,
+    "difficulty": "medium",
+    "question": "Which sales support agent is responsible for the most customers? Give their full name and the customer count.",
+    "sql": "SELECT e.FirstName || ' ' || e.LastName AS agent, COUNT(*) AS customer_count FROM Employee e JOIN Customer c ON c.SupportRepId = e.EmployeeId GROUP BY e.EmployeeId ORDER BY customer_count DESC LIMIT 1;"
+  },
+  {
+    "id": 20,
+    "difficulty": "medium",
+    "question": "Which media type has the most tracks, and how many?",
+    "sql": "SELECT m.Name AS media_type, COUNT(*) AS track_count FROM MediaType m JOIN Track t ON t.MediaTypeId = m.MediaTypeId GROUP BY m.MediaTypeId ORDER BY track_count DESC LIMIT 1;"
+  },
+  {
+    "id": 21,
+    "difficulty": "medium",
+    "question": "How many tracks are in the Rock genre?",
+    "sql": "SELECT COUNT(*) AS rock_tracks FROM Track t JOIN Genre g ON g.GenreId = t.GenreId WHERE g.Name = 'Rock';"
+  },
+  {
+    "id": 22,
+    "difficulty": "medium",
+    "question": "What is the total revenue from customers in Germany, rounded to 2 decimal places?",
+    "sql": "SELECT ROUND(SUM(i.Total), 2) AS germany_revenue FROM Invoice i JOIN Customer c ON c.CustomerId = i.CustomerId WHERE c.Country = 'Germany';"
+  },
+  {
+    "id": 23,
+    "difficulty": "medium",
+    "question": "How many cities have at least 2 customers?",
+    "sql": "SELECT COUNT(*) AS city_count FROM (SELECT City FROM Customer GROUP BY City HAVING COUNT(*) >= 2);"
+  },
+  {
+    "id": 24,
+    "difficulty": "medium",
+    "question": "How many invoices were issued in 2011?",
+    "sql": "SELECT COUNT(*) AS invoices_2011 FROM Invoice WHERE strftime('%Y', InvoiceDate) = '2011';"
+  },
+  {
+    "id": 25,
+    "difficulty": "medium",
+    "question": "Which 3 artists have the most tracks in total, and how many tracks does each have?",
+    "sql": "SELECT ar.Name AS artist, COUNT(*) AS track_count FROM Artist ar JOIN Album al ON al.ArtistId = ar.ArtistId JOIN Track t ON t.AlbumId = al.AlbumId GROUP BY ar.ArtistId ORDER BY track_count DESC LIMIT 3;"
+  },
+  {
+    "id": 26,
+    "difficulty": "hard",
+    "question": "How many customers have bought tracks from at least 10 different genres?",
+    "sql": "SELECT COUNT(*) AS customer_count FROM (SELECT i.CustomerId FROM Invoice i JOIN InvoiceLine il ON il.InvoiceId = i.InvoiceId JOIN Track t ON t.TrackId = il.TrackId GROUP BY i.CustomerId HAVING COUNT(DISTINCT t.GenreId) >= 10);"
+  },
+  {
+    "id": 27,
+    "difficulty": "hard",
+    "question": "Which artist has generated the most revenue from track sales, and how much? Round to 2 decimal places.",
+    "sql": "SELECT ar.Name AS artist, ROUND(SUM(il.UnitPrice * il.Quantity), 2) AS revenue FROM InvoiceLine il JOIN Track t ON t.TrackId = il.TrackId JOIN Album al ON al.AlbumId = t.AlbumId JOIN Artist ar ON ar.ArtistId = al.ArtistId GROUP BY ar.ArtistId ORDER BY revenue DESC LIMIT 1;"
+  },
+  {
+    "id": 28,
+    "difficulty": "hard",
+    "question": "Which genre has generated the most revenue from track sales, and how much? Round to 2 decimal places.",
+    "sql": "SELECT g.Name AS genre, ROUND(SUM(il.UnitPrice * il.Quantity), 2) AS revenue FROM InvoiceLine il JOIN Track t ON t.TrackId = il.TrackId JOIN Genre g ON g.GenreId = t.GenreId GROUP BY g.GenreId ORDER BY revenue DESC LIMIT 1;"
+  },
+  {
+    "id": 29,
+    "difficulty": "hard",
+    "question": "Which sales support agent's customers have generated the most invoice revenue? Give the agent's full name and the revenue rounded to 2 decimal places.",
+    "sql": "SELECT e.FirstName || ' ' || e.LastName AS agent, ROUND(SUM(i.Total), 2) AS revenue FROM Employee e JOIN Customer c ON c.SupportRepId = e.EmployeeId JOIN Invoice i ON i.CustomerId = c.CustomerId GROUP BY e.EmployeeId ORDER BY revenue DESC LIMIT 1;"
+  },
+  {
+    "id": 30,
+    "difficulty": "hard",
+    "question": "Among countries with at least 5 invoices, which has the highest average invoice total? Round the average to 2 decimal places.",
+    "sql": "SELECT BillingCountry AS country, ROUND(AVG(Total), 2) AS avg_invoice FROM Invoice GROUP BY BillingCountry HAVING COUNT(*) >= 5 ORDER BY AVG(Total) DESC LIMIT 1;"
+  },
+  {
+    "id": 31,
+    "difficulty": "hard",
+    "question": "What percentage of total invoice revenue came from customers in the USA? Round to 1 decimal place.",
+    "sql": "SELECT ROUND(100.0 * (SELECT SUM(i.Total) FROM Invoice i JOIN Customer c ON c.CustomerId = i.CustomerId WHERE c.Country = 'USA') / (SELECT SUM(Total) FROM Invoice), 1) AS usa_percent;"
+  },
+  {
+    "id": 32,
+    "difficulty": "hard",
+    "question": "How many customers have spent more in total than the average customer?",
+    "sql": "SELECT COUNT(*) AS above_average_customers FROM (SELECT CustomerId, SUM(Total) AS spent FROM Invoice GROUP BY CustomerId) WHERE spent > (SELECT AVG(spent) FROM (SELECT SUM(Total) AS spent FROM Invoice GROUP BY CustomerId));"
+  },
+  {
+    "id": 33,
+    "difficulty": "hard",
+    "question": "What are the top 3 genres by number of tracks sold to customers in the USA, and how many units of each were sold?",
+    "sql": "SELECT g.Name AS genre, SUM(il.Quantity) AS units_sold FROM InvoiceLine il JOIN Invoice i ON i.InvoiceId = il.InvoiceId JOIN Customer c ON c.CustomerId = i.CustomerId JOIN Track t ON t.TrackId = il.TrackId JOIN Genre g ON g.GenreId = t.GenreId WHERE c.Country = 'USA' GROUP BY g.GenreId ORDER BY units_sold DESC LIMIT 3;"
+  },
+  {
+    "id": 34,
+    "difficulty": "hard",
+    "question": "Which album has generated the most revenue from track sales, and how much? Round to 2 decimal places.",
+    "sql": "SELECT al.Title AS album, ROUND(SUM(il.UnitPrice * il.Quantity), 2) AS revenue FROM InvoiceLine il JOIN Track t ON t.TrackId = il.TrackId JOIN Album al ON al.AlbumId = t.AlbumId GROUP BY al.AlbumId ORDER BY revenue DESC LIMIT 1;"
+  },
+  {
+    "id": 35,
+    "difficulty": "hard",
+    "question": "How many customers have purchased at least one Jazz track?",
+    "sql": "SELECT COUNT(DISTINCT i.CustomerId) AS rock_buyers FROM Invoice i JOIN InvoiceLine il ON il.InvoiceId = i.InvoiceId JOIN Track t ON t.TrackId = il.TrackId JOIN Genre g ON g.GenreId = t.GenreId WHERE g.Name = 'Jazz';"
+  }
+]
