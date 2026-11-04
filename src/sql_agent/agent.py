@@ -23,23 +23,28 @@ TOOL_FUNCTIONS = {
 }
 
 
-def ask(question: str) -> str:
+def ask(question: str) -> dict:
     messages = [
         {"role": "system", "content": SYSTEM_PROMPT},
         {"role": "user", "content": question},
     ]
+    queries = []  # every run_sql call, with its result
 
     for step in range(MAX_STEPS):
         try:
             response = get_llm(messages, TOOLS)
         except APIStatusError as e:
-            return f"The model request failed (error {e.status_code}). Try a narrower question."
+            return {
+                "answer": f"The model request failed (error {e.status_code}). Try a narrower question.",
+                "queries": queries,
+                "steps": step + 1,
+            }
 
         message = response.choices[0].message
 
         # No tool requests means the model has given its final answer.
         if not message.tool_calls:
-            return message.content
+            return {"answer": message.content, "queries": queries, "steps": step + 1}
 
         # Record the model's request in the history.
         messages.append(
@@ -71,6 +76,9 @@ def ask(question: str) -> str:
             else:
                 result = {"error": f"Unknown tool: {name}"}
 
+            if name == "run_sql":
+                queries.append({"sql": args.get("query", ""), "result": result})
+
             messages.append(
                 {
                     "role": "tool",
@@ -79,4 +87,8 @@ def ask(question: str) -> str:
                 }
             )
 
-    return f"I could not find an answer within {MAX_STEPS} steps."
+    return {
+        "answer": f"I could not find an answer within {MAX_STEPS} steps.",
+        "queries": queries,
+        "steps": MAX_STEPS,
+    }
